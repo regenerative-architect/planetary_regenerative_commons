@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#081713">
+  <meta name="description" content="Planetary Systems Commons: a local-first, evidence-cautious catalogue and recombination workspace for the Planetary Restoration Archive.">
+  <meta property="og:title" content="Planetary Systems Commons">
+  <meta property="og:description" content="Explore, verify, and responsibly recombine a deduplicated archive of public-interest systems concepts.">
+  <meta name="twitter:card" content="summary">
+  <title>Planetary Systems Commons</title>
+  <style>
+    :root{
+      --bg:#071410;--bg-2:#0a1d17;--panel:#0d231c;--panel-2:#112c24;--panel-3:#17382e;
+      --text:#eef9f2;--muted:#9db9ae;--faint:#66877b;--line:#24483c;--line-strong:#376858;
+      --leaf:#7be3aa;--leaf-2:#42bf7a;--sky:#75c9ed;--amber:#efc66f;--coral:#ff917d;--violet:#b9a5ff;
+      --danger:#ff7f86;--white:#fff;--shadow:0 18px 55px rgba(0,0,0,.28);--radius:16px;--radius-sm:10px;
+      --max:1480px;--font:ui-sans-serif,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+      --mono:ui-monospace,"Cascadia Code","SFMono-Regular",Consolas,monospace;
+    }
+    html[data-theme="light"]{
+      --bg:#f4f8f3;--bg-2:#e9f2ec;--panel:#fff;--panel-2:#f2f8f4;--panel-3:#e5f2ea;
+      --text:#10251d;--muted:#48665b;--faint:#698078;--line:#c9ddd2;--line-strong:#99b8a8;
+      --leaf:#087b48;--leaf-2:#0d965b;--sky:#096d9c;--amber:#8a5a00;--coral:#ac3e30;--violet:#6547b9;
+      --danger:#a92f3b;--white:#071410;--shadow:0 18px 44px rgba(24,58,44,.12)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--bg)}
+    body{margin:0;min-height:100%;font:15px/1.55 var(--font);color:var(--text);background:
+      radial-gradient(1000px 650px at 10% -8%,color-mix(in srgb,var(--leaf) 10%,transparent),transparent 62%),
+      radial-gradient(900px 600px at 95% 0,color-mix(in srgb,var(--sky) 8%,transparent),transparent 65%),var(--bg)}
+    button,input,select,textarea{font:inherit}button{color:inherit}
+    a{color:var(--sky)}code,.mono{font-family:var(--mono)}
+    ::selection{background:color-mix(in srgb,var(--leaf) 32%,transparent)}
+    :focus-visible{outline:3px solid color-mix(in srgb,var(--sky) 72%,white);outline-offset:3px}
+    .skip{position:fixed;z-index:100;left:1rem;top:-5rem;background:var(--leaf);color:#06130e;padding:.65rem 1rem;border-radius:8px;text-decoration:none;font-weight:800}
+    .skip:focus{top:1rem}
+    .shell{width:min(var(--max),calc(100% - 32px));margin-inline:auto}
+    .topbar{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(18px)}
+    .topbar-row{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.75rem;min-width:0}.brand-mark{width:38px;height:38px;flex:none;color:var(--leaf)}
+    .brand-name{font-weight:850;letter-spacing:-.02em;font-size:1.05rem}.brand-sub{font:11px/1.2 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .header-actions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}
+    .btn{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:10px;padding:.58rem .78rem;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;cursor:pointer;font-weight:720;text-decoration:none;transition:border-color .16s,background .16s,transform .16s}
+    .btn:hover{border-color:var(--line-strong);background:var(--panel-3)}.btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--leaf);border-color:var(--leaf);color:#052014}.btn.primary:hover{background:color-mix(in srgb,var(--leaf) 86%,white)}
+    .btn.ghost{background:transparent}.btn.danger{color:var(--danger)}.btn.small{padding:.4rem .58rem;font-size:.82rem}.btn.icon{width:38px;height:38px;padding:0}
+    .truth-strip{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--panel) 76%,transparent)}
+    .truth-inner{display:flex;align-items:center;gap:.65rem;padding:.48rem 0;color:var(--muted);font-size:.82rem;overflow:auto;white-space:nowrap}
+    .truth-dot{width:7px;height:7px;border-radius:50%;background:var(--leaf);box-shadow:0 0 0 5px color-mix(in srgb,var(--leaf) 12%,transparent)}
+    .tabs-wrap{border-bottom:1px solid var(--line);background:var(--bg)}
+    .tabs{display:flex;gap:.3rem;overflow:auto;padding:.55rem 0;scrollbar-width:thin}
+    .tab{border:0;background:transparent;color:var(--muted);border-radius:9px;padding:.58rem .78rem;cursor:pointer;white-space:nowrap;font-weight:750}
+    .tab:hover{color:var(--text);background:var(--panel-2)}.tab[aria-selected="true"]{color:var(--text);background:var(--panel-3);box-shadow:inset 0 -2px var(--leaf)}
+    main{padding:28px 0 70px}.view{display:none}.view.active{display:block}
+    .hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.6fr);gap:1.1rem;margin-bottom:1rem}
+    .hero-copy,.guardrail-card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 94%,transparent),var(--panel-2));padding:clamp(1.1rem,2.4vw,2rem);box-shadow:var(--shadow)}
+    .eyebrow{font:700 .72rem/1.2 var(--mono);text-transform:uppercase;letter-spacing:.13em;color:var(--leaf);margin-bottom:.55rem}
+    h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2rem,4.6vw,4.2rem);line-height:.98;letter-spacing:-.055em;margin-bottom:.85rem;max-width:15ch}
+    h2{font-size:clamp(1.45rem,2.2vw,2.15rem);letter-spacing:-.035em;line-height:1.08}h3{font-size:1.02rem;letter-spacing:-.015em}
+    .lede{font-size:clamp(1rem,1.4vw,1.16rem);max-width:72ch;color:var(--muted);margin-bottom:1.2rem}
+    .metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem}.metric{padding:.7rem;border:1px solid var(--line);border-radius:11px;background:color-mix(in srgb,var(--bg) 35%,transparent)}
+    .metric strong{display:block;font-size:1.28rem;line-height:1;color:var(--text)}.metric span{color:var(--muted);font-size:.74rem}
+    .guardrail-card{box-shadow:none}.guardrail-card h2{font-size:1.05rem;display:flex;gap:.55rem;align-items:center}.guardrail-list{list-style:none;padding:0;margin:0;display:grid;gap:.7rem}
+    .guardrail-list li{display:grid;grid-template-columns:24px 1fr;gap:.6rem;color:var(--muted)}.guardrail-list b{color:var(--text)}
+    .pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem;margin-top:1rem;font:700 .73rem/1.2 var(--mono);color:var(--muted)}.pipeline b{color:var(--text);border:1px solid var(--line);border-radius:999px;padding:.3rem .48rem;background:var(--panel-2)}
+    .controls{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
+    .filter-grid{display:grid;grid-template-columns:minmax(230px,2fr) repeat(4,minmax(140px,1fr));gap:.65rem}
+    .field{display:grid;gap:.3rem}.field label{font-size:.74rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+    .input,.select,.textarea{width:100%;border:1px solid var(--line);background:var(--bg-2);color:var(--text);border-radius:9px;padding:.68rem .72rem;min-height:42px}.input::placeholder,.textarea::placeholder{color:var(--faint)}
+    .range-row{display:flex;align-items:center;gap:.55rem}.range{accent-color:var(--leaf);width:100%}.range-value{font:700 .78rem var(--mono);color:var(--leaf);min-width:30px}
+    .chip-row{display:flex;gap:.42rem;overflow:auto;padding:.75rem 0 .1rem}.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:.34rem .58rem;white-space:nowrap;cursor:pointer;font-size:.78rem;font-weight:750}.chip:hover,.chip.active{color:var(--text);border-color:var(--leaf);background:color-mix(in srgb,var(--leaf) 10%,transparent)}
+    .resultbar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:.9rem 0}.resultbar p{margin:0;color:var(--muted)}.resultbar strong{color:var(--text)}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}.card{min-width:0;border:1px solid var(--line);border-radius:14px;background:linear-gradient(165deg,var(--panel),color-mix(in srgb,var(--panel-2) 72%,var(--bg)));padding:1rem;display:flex;flex-direction:column;gap:.7rem;transition:transform .16s,border-color .16s;content-visibility:auto;contain-intrinsic-size:410px}
+    .card:hover{transform:translateY(-2px);border-color:var(--line-strong)}.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem}.card h3{margin:0;font-size:1.05rem;line-height:1.24}.card p{color:var(--muted);font-size:.86rem;margin:0}
+    .badges{display:flex;flex-wrap:wrap;gap:.32rem}.badge{display:inline-flex;align-items:center;gap:.28rem;border:1px solid var(--line);border-radius:999px;padding:.22rem .43rem;font:700 .68rem/1.1 var(--mono);color:var(--muted);background:var(--bg-2)}
+    .badge.layer{color:var(--sky)}.badge.established-idea{color:var(--leaf)}.badge.integration{color:var(--sky)}.badge.hypothesis{color:var(--amber)}.badge.speculative-concept{color:var(--violet)}.badge.experimental-prototype{color:var(--coral)}.badge.field-test-candidate{color:var(--leaf);border-color:color-mix(in srgb,var(--leaf) 55%,var(--line))}
+    .score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}.score{min-width:0}.score-head{display:flex;justify-content:space-between;gap:.2rem;font:700 .65rem/1 var(--mono);color:var(--muted);margin-bottom:.28rem}.meter{height:5px;background:var(--bg);border-radius:99px;overflow:hidden}.meter i{display:block;height:100%;border-radius:inherit;background:var(--leaf)}.score.evidence .meter i{background:var(--sky)}.score.safety .meter i{background:var(--amber)}.score.maturity .meter i{background:var(--coral)}
+    .concepts{display:flex;flex-wrap:wrap;gap:.3rem}.concept{font-size:.71rem;color:var(--muted);border-bottom:1px dotted var(--line-strong)}
+    .source-path{font:500 .69rem/1.35 var(--mono);color:var(--faint);overflow-wrap:anywhere;margin-top:auto}.card-actions{display:flex;gap:.4rem;flex-wrap:wrap}.card-actions .btn{flex:1}.star[aria-pressed="true"]{color:var(--amber);border-color:var(--amber)}.mix[aria-pressed="true"]{color:var(--leaf);border-color:var(--leaf)}
+    .empty{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:14px;padding:2rem;text-align:center;color:var(--muted)}
+    .more-wrap{text-align:center;margin:1rem 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1rem}.section-head p{color:var(--muted);max-width:74ch;margin-bottom:0}
+    .workspace-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.65fr);gap:1rem}.panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:1rem}.panel h3{margin-bottom:.7rem}
+    .canvas-wrap{position:relative;border:1px solid var(--line);border-radius:12px;min-height:480px;background:
+      linear-gradient(color-mix(in srgb,var(--line) 28%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--line) 28%,transparent) 1px,transparent 1px),var(--bg-2);background-size:32px 32px;overflow:hidden}
+    canvas{display:block;width:100%;height:480px}.graph-legend{position:absolute;left:.65rem;bottom:.65rem;background:color-mix(in srgb,var(--bg) 88%,transparent);border:1px solid var(--line);border-radius:8px;padding:.45rem .6rem;color:var(--muted);font-size:.72rem;pointer-events:none}
+    .toolbar{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.7rem}.selected-list,.suggestion-list{display:grid;gap:.5rem}.selected-item,.suggestion{border:1px solid var(--line);border-radius:10px;padding:.65rem;background:var(--panel-2)}.selected-item{display:grid;grid-template-columns:1fr auto;gap:.5rem}.selected-item b,.suggestion b{display:block;font-size:.86rem}.selected-item small,.suggestion small{color:var(--muted)}
+    .compat-box{border:1px solid var(--line);border-radius:10px;padding:.75rem;background:var(--bg-2);margin:.75rem 0}.compat-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}.compat-numbers div{padding:.5rem;border-radius:8px;background:var(--panel-2)}.compat-numbers strong{display:block;font-size:1.05rem}.compat-numbers span{font-size:.7rem;color:var(--muted)}
+    .graph-alt{margin-top:.7rem}.graph-alt summary{cursor:pointer;color:var(--muted)}.graph-alt ul{color:var(--muted);font-size:.82rem}
+    .recipe-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}.recipe{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:1rem}.recipe h3{font-size:1.12rem}.recipe p{color:var(--muted)}.recipe ol{padding-left:1.2rem;color:var(--muted)}.gate{border-left:3px solid var(--amber);padding:.55rem .7rem;background:var(--bg-2);border-radius:0 8px 8px 0;font-size:.82rem;margin:.55rem 0}.gate.evidence{border-color:var(--sky)}
+    .list-controls{display:grid;grid-template-columns:minmax(250px,2fr) minmax(150px,1fr);gap:.65rem;margin-bottom:.8rem}.data-list{display:grid;gap:.5rem}.data-row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(120px,.5fr) minmax(90px,.35fr);gap:.7rem;align-items:center;border:1px solid var(--line);border-radius:10px;padding:.7rem;background:var(--panel)}.data-row b{display:block}.data-row small{color:var(--muted);overflow-wrap:anywhere}.data-row .right{text-align:right;color:var(--muted);font-family:var(--mono);font-size:.74rem}
+    .dedupe-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin:1rem 0}.dedupe-step{border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:.75rem;position:relative}.dedupe-step:not(:last-child)::after{content:"→";position:absolute;right:-.45rem;top:50%;transform:translateY(-50%);z-index:2;color:var(--leaf);font-weight:900}.dedupe-step strong{display:block;font-size:1.35rem}.dedupe-step span{font-size:.72rem;color:var(--muted)}
+    .inventory-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{text-align:left;padding:.62rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}th{position:sticky;top:0;background:var(--panel-2);color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}tr:last-child td{border-bottom:0}td code{font-size:.72rem;overflow-wrap:anywhere}
+    .docs{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.35fr);gap:1rem}.doc-stack{display:grid;gap:.65rem}.doc{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}.doc summary{cursor:pointer;padding:.85rem 1rem;font-weight:800;display:flex;justify-content:space-between;gap:.8rem;list-style:none}.doc summary::after{content:"＋";color:var(--leaf)}.doc[open] summary::after{content:"−"}.doc-body{padding:0 1rem 1rem;color:var(--muted)}.doc-body strong{color:var(--text)}.definition-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}.definition{border:1px solid var(--line);border-radius:9px;padding:.65rem;background:var(--bg-2)}.definition b{display:block;color:var(--text);text-transform:capitalize}.sticky-note{position:sticky;top:142px;border:1px solid var(--line);border-radius:12px;padding:1rem;background:var(--panel)}.sticky-note ul{padding-left:1.1rem;color:var(--muted)}
+    .attribution{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem}.prose{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:1.2rem}.prose p,.prose li{color:var(--muted)}.prose strong{color:var(--text)}.notice{border:1px solid color-mix(in srgb,var(--amber) 45%,var(--line));background:color-mix(in srgb,var(--amber) 7%,var(--panel));border-radius:11px;padding:.8rem;color:var(--muted)}
+    dialog{width:min(860px,calc(100% - 24px));max-height:88vh;border:1px solid var(--line-strong);border-radius:16px;background:var(--panel);color:var(--text);box-shadow:var(--shadow);padding:0}dialog::backdrop{background:rgba(0,10,7,.7);backdrop-filter:blur(5px)}.dialog-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:1rem;align-items:start;padding:1rem;border-bottom:1px solid var(--line);background:var(--panel)}.dialog-head h2{margin:0;font-size:1.3rem}.dialog-body{padding:1rem}.dialog-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.dialog-section{border:1px solid var(--line);border-radius:10px;padding:.8rem;background:var(--panel-2)}.dialog-section h3{margin-bottom:.5rem}.dialog-section ul{padding-left:1.1rem;color:var(--muted)}.dialog-foot{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:.5rem;padding:.8rem 1rem;border-top:1px solid var(--line);background:var(--panel)}
+    .toast{position:fixed;z-index:80;right:1rem;bottom:1rem;max-width:min(420px,calc(100% - 2rem));border:1px solid var(--line-strong);border-radius:10px;padding:.7rem .85rem;background:var(--panel-3);box-shadow:var(--shadow);transform:translateY(140%);transition:transform .2s}.toast.show{transform:none}
+    .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+    footer{border-top:1px solid var(--line);padding:1.2rem 0 2rem;color:var(--muted)}.footer-row{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}.footer-row p{margin:0}
+    noscript .nojs{width:min(900px,calc(100% - 32px));margin:2rem auto;border:2px solid var(--amber);border-radius:14px;padding:1rem;background:var(--panel);color:var(--text)}
+    [data-tip]{position:relative}[data-tip]:hover::after,[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;z-index:50;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;max-width:260px;padding:.48rem .58rem;border:1px solid var(--line-strong);border-radius:8px;background:var(--bg);color:var(--text);font-size:.72rem;font-weight:500;box-shadow:var(--shadow);pointer-events:none}
+    @media (max-width:1050px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-grid{grid-template-columns:2fr repeat(2,1fr)}.hero,.workspace-grid,.docs,.attribution{grid-template-columns:1fr}.sticky-note{position:static}.metric-row{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:700px){.shell{width:min(100% - 20px,var(--max))}.header-actions .label{display:none}.topbar-row{min-height:60px}.truth-inner{font-size:.75rem}.cards,.recipe-grid,.inventory-grid{grid-template-columns:1fr}.filter-grid,.list-controls,.dialog-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:repeat(2,1fr)}.score-grid{grid-template-columns:repeat(2,1fr)}.data-row{grid-template-columns:1fr}.data-row .right{text-align:left}.dedupe-flow{grid-template-columns:1fr}.dedupe-step:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-.65rem}.definition-grid{grid-template-columns:1fr}h1{font-size:2.45rem}.canvas-wrap,canvas{min-height:390px;height:390px}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+    @media print{
+      :root{--bg:#fff;--panel:#fff;--panel-2:#fff;--text:#000;--muted:#333;--faint:#555;--line:#aaa;--leaf:#075f38;--sky:#075b7d;--amber:#734800;--coral:#813429}
+      body{background:#fff;font-size:10pt}.topbar,.truth-strip,.tabs-wrap,.controls,.header-actions,.card-actions,.more-wrap,.toolbar,.toast,dialog,footer{display:none!important}main{padding:0}.view{display:none!important}.view.active{display:block!important}.hero{grid-template-columns:1fr}.guardrail-card{box-shadow:none}.cards{grid-template-columns:repeat(2,1fr)}.card,.panel,.recipe,.prose,.hero-copy,.guardrail-card{break-inside:avoid;box-shadow:none}.canvas-wrap{display:none}.workspace-grid,.docs,.attribution{grid-template-columns:1fr}.source-path{color:#333}@page{margin:14mm}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the Commons workspace</a>
+  <noscript>
+    <div class="nojs">
+      <h1>Planetary Systems Commons</h1>
+      <p>This is a self-contained offline catalogue, but its search, filters, concept graph, local workspace, and import/export controls require JavaScript.</p>
+      <p>The source inventory contains 4,582 files and 1,372 HTML pages, collapsed to 1,213 byte-distinct builds and 922 auditable version families. Sensitive material and repository internals are excluded from the public catalogue.</p>
+      <p>Scientific caution: inclusion is not endorsement, novelty proof, validation, certification, or evidence of real-world impact.</p>
+    </div>
+  </noscript>
+
+  <header class="topbar">
+    <div class="shell topbar-row">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" d="M24 4c7 7 13 9 18 10-1 15-7 24-18 30C13 38 7 29 6 14c5-1 11-3 18-10Z"/><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M15 29c7-1 12-5 17-13m-10 7c-4-1-7 0-10 2m14 5c4-1 7 0 10 2"/></svg>
+        <div><div class="brand-name">Planetary Systems Commons</div><div class="brand-sub">archive → primitives → responsible combinations</div></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn small ghost" id="printBtn" type="button" title="Print the active view">Print</button>
+        <button class="btn small ghost" id="exportBtn" type="button"><span class="label">Export workspace</span><span aria-hidden="true">⇩</span></button>
+        <label class="btn small ghost" for="importFile"><span class="label">Import workspace</span><span aria-hidden="true">⇧</span></label>
+        <input class="sr-only" id="importFile" type="file" accept="application/json,.json">
+        <button class="btn icon ghost" id="themeBtn" type="button" aria-label="Toggle light and dark theme" data-tip="Theme"><span aria-hidden="true">◐</span></button>
+      </div>
+    </div>
+  </header>
+  <div class="truth-strip" role="note">
+    <div class="shell truth-inner"><span class="truth-dot" aria-hidden="true"></span><strong>Zero-harm operating rule:</strong><span>evidence before amplification</span><span>·</span><span>consent before intervention</span><span>·</span><span>reversible pilots</span><span>·</span><span>no surveillance, coercion, or automated accusations</span></div>
+  </div>
+  <div class="tabs-wrap">
+    <nav class="shell tabs" aria-label="Commons views" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-view-target="explore">Explore</button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="recombine">Recombine <span id="mixCount">0</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="recipes">Recipes</button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="research">Research & data</button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="inventory">Inventory</button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="method">Method & caution</button>
+      <button class="tab" role="tab" aria-selected="false" data-view-target="attributions">Attributions & licenses</button>
+    </nav>
+  </div>
+
+  <main id="main" class="shell">
+    <section class="view active" id="view-explore" role="tabpanel">
+      <div class="hero">
+        <section class="hero-copy">
+          <div class="eyebrow">Working catalogue · generated 2026-08-31</div>
+          <h1>Combine systems, not silos.</h1>
+          <p class="lede">Search a deduplicated archive, inspect evidence and safety signals, then assemble responsible cross-domain recipes. The catalogue describes artifacts; it does not validate their claims.</p>
+          <div class="metric-row" id="heroMetrics" aria-label="Archive summary"></div>
+          <div class="pipeline" aria-label="Composition model"><b>concepts</b><span>→</span><b>modules</b><span>→</span><b>patterns</b><span>→</span><b>systems</b><span>→</span><b>deployments</b></div>
+        </section>
+        <aside class="guardrail-card">
+          <h2><span aria-hidden="true">◇</span> Read every badge as a question</h2>
+          <ul class="guardrail-list">
+            <li><span aria-hidden="true">01</span><span><b>Knowledge status</b><br>Established, integrated, hypothesized, or speculative?</span></li>
+            <li><span aria-hidden="true">02</span><span><b>Build status</b><br>Conceptual, experimental, or ready only for a bounded pilot?</span></li>
+            <li><span aria-hidden="true">03</span><span><b>Score provenance</b><br>Curator-reviewed rubric or automated documentation signal?</span></li>
+            <li><span aria-hidden="true">04</span><span><b>Rights gate</b><br>Metadata visibility never grants permission to reuse source code or assets.</span></li>
+          </ul>
+        </aside>
+      </div>
+
+      <form class="controls" id="filterForm" role="search" aria-label="Filter the archive catalogue">
+        <div class="filter-grid">
+          <div class="field"><label for="searchInput">Search title, concept, question, path</label><input class="input" id="searchInput" type="search" autocomplete="off" placeholder="Try “uncertainty”, “water sovereignty”, or “local-first”…"></div>
+          <div class="field"><label for="domainSelect">Domain</label><select class="select" id="domainSelect"><option value="">All domains</option></select></div>
+          <div class="field"><label for="layerSelect">Primary layer</label><select class="select" id="layerSelect"><option value="">All layers</option></select></div>
+          <div class="field"><label for="statusSelect">Status</label><select class="select" id="statusSelect"><option value="">All statuses</option></select></div>
+          <div class="field"><label for="sortSelect">Sort</label><select class="select" id="sortSelect"><option value="recommended">Safety-weighted</option><option value="evidence">Evidence signal</option><option value="maturity">Artifact maturity</option><option value="compatibility">Compatibility</option><option value="title">Title A–Z</option></select></div>
+        </div>
+        <div class="chip-row" id="layerChips" aria-label="Quick layer filters"></div>
+        <div class="field" style="max-width:520px;margin-top:.7rem"><label for="evidenceRange">Minimum evidence documentation signal</label><div class="range-row"><input class="range" id="evidenceRange" type="range" min="0" max="80" step="20" value="0"><span class="range-value" id="evidenceValue">0</span><button class="btn small ghost" id="clearFilters" type="button">Clear filters</button></div></div>
+      </form>
+      <div class="resultbar"><p id="resultSummary" aria-live="polite"></p><p><span id="favoriteCount">0</span> saved · <span id="selectedCount">0</span> in mixer</p></div>
+      <div class="cards" id="catalogCards"></div>
+      <div class="more-wrap"><button class="btn" id="loadMoreCards" type="button">Load more</button></div>
+    </section>
+
+    <section class="view" id="view-recombine" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Concept graph & recombination explorer</div><h2>Build a responsible stack</h2><p>Select up to six artifacts. Connections reflect shared concepts and domains—not proven interoperability. Every proposed combination needs evidence, rights, safety, and governance review.</p></div></div>
+      <div class="workspace-grid">
+        <section class="panel">
+          <div class="toolbar"><button class="btn small primary" id="suggestBtn" type="button">Suggest compatible additions</button><button class="btn small" id="loadExampleBtn" type="button">Load evidence-safe example</button><button class="btn small danger" id="clearMixerBtn" type="button">Clear mixer</button></div>
+          <div class="canvas-wrap"><canvas id="graphCanvas" role="img" aria-label="Concept graph connecting selected archive artifacts"></canvas><div class="graph-legend">Line strength = shared concepts · select a node for details</div></div>
+          <details class="graph-alt"><summary>Accessible graph connection list</summary><ul id="graphEdges"></ul></details>
+        </section>
+        <aside class="panel">
+          <h3>Selected components</h3><div class="selected-list" id="selectedList"></div>
+          <div class="compat-box" id="compatBox"></div>
+          <h3>Combination suggestions</h3><div class="suggestion-list" id="suggestionList"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-recipes" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Reusable compositions</div><h2>Recipes with gates—not shortcuts</h2><p>Each recipe pairs components with a sequence, an evidence gate, and a safety gate. Loading a recipe creates a local workspace; it does not authorize deployment.</p></div></div>
+      <div class="recipe-grid" id="recipeGrid"></div>
+    </section>
+
+    <section class="view" id="view-research" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Research, datasets & innovation records</div><h2>Inspect supporting artifacts</h2><p>These are metadata-only references to structured files, papers, manifests, and registries. Sparse or self-described “prototype-ready” data remains illustrative until independently reviewed.</p></div></div>
+      <div class="list-controls"><input class="input" id="researchSearch" type="search" placeholder="Search research/data paths and concepts…"><select class="select" id="researchLayer"><option value="">All record layers</option><option value="dataset">Datasets</option><option value="research">Research</option><option value="innovation">Innovation</option><option value="safety">Safety</option></select></div>
+      <div class="data-list" id="researchList"></div><div class="more-wrap"><button class="btn" id="loadMoreResearch" type="button">Load more records</button></div>
+    </section>
+
+    <section class="view" id="view-inventory" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Transparent corpus accounting</div><h2>Counts that do not inflate the archive</h2><p>Directories are excluded from file totals. Exact hashes are definitive; visible-text and version-family collapse are conservative discovery aids. Nested ZIP members remain separately counted.</p></div></div>
+      <div class="dedupe-flow" id="dedupeFlow"></div>
+      <div class="inventory-grid">
+        <section class="panel"><h3>Public extension inventory</h3><div class="table-wrap"><table><thead><tr><th>Extension</th><th>Files</th></tr></thead><tbody id="extensionRows"></tbody></table></div></section>
+        <section class="panel"><h3>Quarantined categories</h3><p style="color:var(--muted)">Aggregate counts only; filenames and contents are not exposed.</p><div class="table-wrap"><table><thead><tr><th>Reason</th><th>Files</th></tr></thead><tbody id="quarantineRows"></tbody></table></div></section>
+      </div>
+      <section class="panel" style="margin-top:.8rem"><h3>Allow-listed public metadata records</h3><p style="color:var(--muted)">This table contains only version-collapsed catalogue families and curated research/data references. It is not a raw file manifest.</p><div class="list-controls"><input class="input" id="inventorySearch" type="search" placeholder="Search sanitized public metadata…"><select class="select" id="inventoryExtension"><option value="">All extensions</option></select></div><div class="table-wrap"><table><thead><tr><th>Representative path</th><th>Type</th><th>Size</th><th>Family paths</th><th>SHA-256 prefix</th></tr></thead><tbody id="inventoryRows"></tbody></table></div><div class="more-wrap"><button class="btn" id="loadMoreInventory" type="button">Load more records</button></div></section>
+    </section>
+
+    <section class="view" id="view-method" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Documentation & scientific caution</div><h2>How to read—and challenge—the Commons</h2><p>Every grouping, label, and score remains inspectable. Exact content hashes answer identity; taxonomy and readiness remain reviewable judgments.</p></div></div>
+      <div class="docs"><div class="doc-stack">
+        <details class="doc" open><summary>Deduplication and version collapse</summary><div class="doc-body"><ol><li>Count ZIP files, never directory entries.</li><li>Collapse byte-identical files by SHA-256.</li><li>Compare normalized visible HTML after removing markup, scripts, styles, templates, and SVG.</li><li>Group probable versions by conservative title/path rules while retaining every public variant, reason, confidence, and hash.</li><li>Keep translations and place-specific adaptations distinct when purpose differs.</li></ol><p><strong>Important:</strong> hashes prove byte identity or integrity—not authorship, originality, truth, safety, or impact.</p></div></details>
+        <details class="doc"><summary>Taxonomy: concepts through deployments</summary><div class="doc-body"><div class="definition-grid" id="layerDefinitions"></div></div></details>
+        <details class="doc"><summary>Two-axis innovation status</summary><div class="doc-body"><p><strong>Knowledge status</strong> asks whether the underlying claim is established, integrated, hypothesized, or speculative. <strong>Build status</strong> asks whether the artifact is an experimental prototype or a candidate only for a bounded pilot.</p><div class="definition-grid" id="statusDefinitions"></div><p>No item is called field-tested, production, certified, or a breakthrough. Archive timestamps show that bytes existed; they do not validate claims.</p></div></details>
+        <details class="doc"><summary>Compatibility, evidence, safety & maturity scores</summary><div class="doc-body"><div class="definition-grid" id="scoreDefinitions"></div><p>Most records use automated documentation signals. A small representative set has curator-reviewed rubric scores. Neither is a probability, certification, or substitute for domain review.</p></div></details>
+        <details class="doc"><summary>Privacy and security quarantine</summary><div class="doc-body"><p>Potential credentials, private-key blocks, personal conversation/media exports, logs, and repository internals are excluded from public records. The Commons never embeds raw corpus text or files. Incident, medical, legal, geopolitical, biosafety, and dual-use material should receive additional review before any wider publication.</p></div></details>
+        <details class="doc"><summary>Scientific caution and safe progression</summary><div class="doc-body"><p>Self-descriptions such as “research-grade,” “production-grade,” “safe,” “ISO compliant,” “prototype_ready,” or “breakthrough” are not repeated as verified facts.</p><p>A responsible progression is: <strong>speculative concept → testable hypothesis → controlled prototype → ethics-reviewed field-test candidate → independently documented field result.</strong> Evidence—not author declaration—moves an item forward.</p></div></details>
+        <details class="doc"><summary>Local-first persistence and portability</summary><div class="doc-body"><p>Favorites, mixer selections, and private notes stay in IndexedDB on this device, with a localStorage fallback. Export creates a portable workspace JSON; import validates IDs and limits note sizes. Reset removes only this page’s local workspace.</p></div></details>
+      </div><aside class="sticky-note"><h3>Four mandatory gates</h3><ul><li><strong>Evidence:</strong> What would falsify the claim?</li><li><strong>Safety:</strong> Who can be harmed or excluded?</li><li><strong>Consent:</strong> Who owns the decision and data?</li><li><strong>Rights:</strong> What license and attribution apply?</li></ul><button class="btn danger" id="resetBtn" type="button">Reset local workspace</button></aside></div>
+    </section>
+
+    <section class="view" id="view-attributions" role="tabpanel" hidden>
+      <div class="section-head"><div><div class="eyebrow">Attributions & licenses</div><h2>Metadata can be open while source rights differ</h2><p>The interface is independently authored. The underlying archive has no safe blanket license.</p></div></div>
+      <div class="attribution">
+        <article class="prose"><h3>Attribution notice</h3><p>This index is an original catalogue interface built from metadata and static inspection of the user-supplied Planetary Restoration Archive corpus. Project titles and source paths identify archived artifacts; inclusion does not endorse or validate their claims.</p><p><strong>No restricted archive code is intentionally reproduced.</strong> This catalogue does not redistribute source code, binaries, datasets, PDFs, chat exports, personal media, or embedded third-party assets. Individual artifacts retain their own licenses and attribution requirements, which may differ by file or subtree.</p><p>Items with unclear, conflicting, custom, noncommercial, all-rights-reserved, or privacy-sensitive terms are metadata-only and must be reviewed before reuse. Unknown license status grants no permission. Third-party standards, organizations, datasets, libraries, and publications named inside artifacts remain the property of their respective owners.</p><p>The archive identifies <strong>Ricky Foster</strong> as creator/curator in multiple locations and names ChatGPT/Navi as AI assistance or co-architecture in some materials. AI assistance is credited as process context, not treated as a rights-holder.</p><div class="notice"><strong>Reuse rule:</strong> inspect the exact source file, nearest applicable license, embedded assets, attribution chain, and any conflicting notices before copying or adapting anything.</div></article>
+        <aside class="prose"><h3>Detected license candidates</h3><p>Phrase-based detection is a routing aid, not legal advice.</p><div class="table-wrap"><table><thead><tr><th>Detected family</th><th>Candidates</th></tr></thead><tbody id="licenseRows"></tbody></table></div><h3 style="margin-top:1rem">Source provenance</h3><p class="mono" id="archiveHash"></p><p>The source ZIP itself is not published by this page. Only sanitized catalogue metadata is embedded.</p></aside>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell footer-row"><p>Planetary Systems Commons · local-first · metadata-only</p><p id="storageStatus">Starting local workspace…</p></div></footer>
+
+  <dialog id="detailDialog" aria-labelledby="detailTitle"><div class="dialog-head"><div><div class="eyebrow">Catalogue record</div><h2 id="detailTitle"></h2></div><button class="btn icon ghost" data-close-dialog="detailDialog" type="button" aria-label="Close details">×</button></div><div class="dialog-body" id="detailBody"></div><div class="dialog-foot"><button class="btn" id="detailFavorite" type="button">Save</button><button class="btn primary" id="detailMix" type="button">Add to mixer</button><button class="btn" data-close-dialog="detailDialog" type="button">Close</button></div></dialog>
+  <dialog id="resetDialog" aria-labelledby="resetTitle"><div class="dialog-head"><h2 id="resetTitle">Reset local workspace?</h2><button class="btn icon ghost" data-close-dialog="resetDialog" type="button" aria-label="Close">×</button></div><div class="dialog-body"><p>This removes saved items, mixer selections, notes, filters, and theme preferences from this device. The embedded catalogue is unchanged.</p></div><div class="dialog-foot"><button class="btn" data-close-dialog="resetDialog" type="button">Cancel</button><button class="btn danger" id="confirmReset" type="button">Reset workspace</button></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script id="commons-data" type="application/json">__COMMONS_DATA__</script>
+  <script>
+  (()=>{
+    'use strict';
+    const DATA=JSON.parse(document.getElementById('commons-data').textContent);
+    const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+    const cardById=new Map(DATA.cards.map(c=>[c.id,c]));
+    const defaultState={schema:'psc-workspace-v1',favorites:[],mixer:[],notes:{},theme:'dark',view:'explore',filters:{q:'',domain:'',layer:'',status:'',evidence:0,sort:'recommended'}};
+    let state=structuredClone(defaultState), cardLimit=36, researchLimit=60, inventoryLimit=80, detailId=null, db=null, saveTimer=null, toastTimer=null, graphNodes=[];
+    const allowedViews=new Set(['explore','recombine','recipes','research','inventory','method','attributions']);
+    const fmt=n=>new Intl.NumberFormat().format(n), bytes=n=>{const u=['B','KB','MB','GB'];let i=0,v=Number(n)||0;while(v>=1024&&i<u.length-1){v/=1024;i++}return `${v>=10||i===0?v.toFixed(0):v.toFixed(1)} ${u[i]}`};
+    const esc=v=>String(v??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    const slug=v=>String(v).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    const unique=a=>[...new Set(a.filter(Boolean))];
+    const toast=message=>{const el=$('#toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600)};
+
+    function openDb(){return new Promise(resolve=>{if(!('indexedDB'in window)){resolve(null);return}const req=indexedDB.open('planetary_systems_commons',1);req.onupgradeneeded=()=>req.result.createObjectStore('kv');req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null)})}
+    function dbGet(){return new Promise(resolve=>{if(!db){resolve(null);return}const req=db.transaction('kv','readonly').objectStore('kv').get('workspace');req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)})}
+    function dbPut(value){return new Promise(resolve=>{if(!db){try{localStorage.setItem('psc_workspace',JSON.stringify(value))}catch{}resolve();return}const tx=db.transaction('kv','readwrite');tx.objectStore('kv').put(value,'workspace');tx.oncomplete=resolve;tx.onerror=resolve})}
+    function validateState(value){const next=structuredClone(defaultState);if(!value||value.schema!==next.schema)return next;const validIds=new Set(DATA.cards.map(c=>c.id));next.favorites=unique(Array.isArray(value.favorites)?value.favorites.filter(id=>validIds.has(id)):[]).slice(0,500);next.mixer=unique(Array.isArray(value.mixer)?value.mixer.filter(id=>validIds.has(id)):[]).slice(0,6);if(value.notes&&typeof value.notes==='object'){for(const [id,note] of Object.entries(value.notes)){if(validIds.has(id)&&typeof note==='string')next.notes[id]=note.slice(0,10000)}}next.theme=value.theme==='light'?'light':'dark';next.view=allowedViews.has(value.view)?value.view:'explore';if(value.filters&&typeof value.filters==='object')next.filters={...next.filters,...Object.fromEntries(Object.entries(value.filters).filter(([,v])=>['string','number'].includes(typeof v)))};return next}
+    async function loadState(){db=await openDb();let saved=await dbGet();if(!saved){try{saved=JSON.parse(localStorage.getItem('psc_workspace')||'null')}catch{}}state=validateState(saved);$('#storageStatus').textContent=db?'Workspace stored locally in IndexedDB':'Workspace stored locally with browser fallback'}
+    function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>dbPut({...state,updatedAt:new Date().toISOString()}),180)}
+    function applyTheme(){document.documentElement.dataset.theme=state.theme;document.querySelector('meta[name="theme-color"]').content=state.theme==='light'?'#f4f8f3':'#081713'}
+
+    function initMetrics(){const m=DATA.metrics;$('#heroMetrics').innerHTML=[['Public families',m.publicCatalogFamilies],['Distinct HTML builds',m.distinctHtmlBuilds],['Research/data records',m.researchDatasetRecords],['Quarantined files',m.quarantinedFiles]].map(([label,value])=>`<div class="metric"><strong>${fmt(value)}</strong><span>${esc(label)}</span></div>`).join('')}
+    function fillSelect(el,values){el.insertAdjacentHTML('beforeend',values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''))}
+    function initFilters(){fillSelect($('#domainSelect'),unique(DATA.cards.map(c=>c.domain)).sort());fillSelect($('#layerSelect'),Object.keys(DATA.definitions.layers));fillSelect($('#statusSelect'),Object.keys(DATA.definitions.statuses));const layers=Object.keys(DATA.definitions.layers);$('#layerChips').innerHTML=['',...layers].map(v=>`<button class="chip${state.filters.layer===v?' active':''}" type="button" data-layer-chip="${esc(v)}">${v?esc(v):'all layers'}</button>`).join('');const f=state.filters;$('#searchInput').value=f.q||'';$('#domainSelect').value=f.domain||'';$('#layerSelect').value=f.layer||'';$('#statusSelect').value=f.status||'';$('#evidenceRange').value=Number(f.evidence)||0;$('#evidenceValue').textContent=$('#evidenceRange').value;$('#sortSelect').value=f.sort||'recommended'}
+    function syncFilters(){state.filters={q:$('#searchInput').value.trim(),domain:$('#domainSelect').value,layer:$('#layerSelect').value,status:$('#statusSelect').value,evidence:Number($('#evidenceRange').value),sort:$('#sortSelect').value};$$('[data-layer-chip]').forEach(ch=>ch.classList.toggle('active',ch.dataset.layerChip===state.filters.layer));cardLimit=36;scheduleSave();renderCards()}
+    function searchable(c){return [c.title,c.description,c.path,c.domain,...c.domains,...c.layers,...c.statuses,...c.concepts,...c.features,...c.questions.map(q=>q.text)].join(' ').toLowerCase()}
+    function filteredCards(){const f=state.filters,q=f.q.toLowerCase();let list=DATA.cards.filter(c=>(!q||searchable(c).includes(q))&&(!f.domain||c.domains.includes(f.domain))&&(!f.layer||c.layers.includes(f.layer))&&(!f.status||c.statuses.includes(f.status))&&c.scores.evidence>=Number(f.evidence||0));const score=c=>c.scores.safety*1.2+c.scores.evidence+c.scores.maturity*.75+c.scores.compatibility*.7-(c.knowledgeStatus==='speculative concept'?20:0);list.sort((a,b)=>f.sort==='title'?a.title.localeCompare(b.title):f.sort==='evidence'?b.scores.evidence-a.scores.evidence:f.sort==='maturity'?b.scores.maturity-a.scores.maturity:f.sort==='compatibility'?b.scores.compatibility-a.scores.compatibility:score(b)-score(a));return list}
+    function scoreHtml(name,value){return `<div class="score ${slug(name)}"><div class="score-head"><span>${esc(name.slice(0,1).toUpperCase())}</span><span>${value}</span></div><div class="meter"><i style="width:${Math.max(0,Math.min(100,value))}%"></i></div></div>`}
+    function badgesHtml(c){return [`<span class="badge layer">${esc(c.layer)}</span>`,...c.statuses.map(s=>`<span class="badge ${slug(s)}">${esc(s)}</span>`)].join('')}
+    function cardHtml(c){const saved=state.favorites.includes(c.id),mixed=state.mixer.includes(c.id);return `<article class="card" data-card-id="${c.id}"><div class="card-top"><div><div class="badges">${badgesHtml(c)}</div><h3 style="margin-top:.55rem">${esc(c.title)}</h3></div><button class="btn icon small star" type="button" data-favorite="${c.id}" aria-pressed="${saved}" aria-label="${saved?'Remove from':'Save to'} favorites">${saved?'★':'☆'}</button></div><p>${esc(c.description)}</p><div class="score-grid" aria-label="Compatibility ${c.scores.compatibility}, evidence ${c.scores.evidence}, safety ${c.scores.safety}, maturity ${c.scores.maturity}">${scoreHtml('compatibility',c.scores.compatibility)}${scoreHtml('evidence',c.scores.evidence)}${scoreHtml('safety',c.scores.safety)}${scoreHtml('maturity',c.scores.maturity)}</div><div class="concepts">${c.concepts.slice(0,4).map(x=>`<span class="concept">${esc(x)}</span>`).join('')}</div><div class="source-path">${esc(c.path)}</div><div class="card-actions"><button class="btn small" type="button" data-detail="${c.id}">Inspect</button><button class="btn small mix" type="button" data-mix="${c.id}" aria-pressed="${mixed}">${mixed?'In mixer':'Add to mixer'}</button></div></article>`}
+    function renderCards(){const list=filteredCards(),shown=list.slice(0,cardLimit);$('#catalogCards').innerHTML=shown.length?shown.map(cardHtml).join(''):`<div class="empty"><h3>No matching systems</h3><p>Clear a filter or try a broader concept.</p></div>`;$('#resultSummary').innerHTML=`Showing <strong>${fmt(shown.length)}</strong> of <strong>${fmt(list.length)}</strong> matching families · ${fmt(DATA.metrics.publicCatalogFamilies)} total public families`;$('#loadMoreCards').hidden=shown.length>=list.length;renderCounts()}
+    function renderCounts(){$('#favoriteCount').textContent=state.favorites.length;$('#selectedCount').textContent=state.mixer.length;$('#mixCount').textContent=state.mixer.length}
+    function toggleFavorite(id){state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];scheduleSave();renderCards();if(detailId===id)renderDetailButtons();toast(state.favorites.includes(id)?'Saved locally':'Removed from saved items')}
+    function toggleMixer(id){if(state.mixer.includes(id))state.mixer=state.mixer.filter(x=>x!==id);else{if(state.mixer.length>=6){toast('The mixer holds up to six components');return}state.mixer=[...state.mixer,id]}scheduleSave();renderCards();renderMixer();if(detailId===id)renderDetailButtons();toast(state.mixer.includes(id)?'Added to mixer':'Removed from mixer')}
+
+    function renderDetailButtons(){if(!detailId)return;$('#detailFavorite').textContent=state.favorites.includes(detailId)?'Remove saved':'Save';$('#detailMix').textContent=state.mixer.includes(detailId)?'Remove from mixer':'Add to mixer'}
+    function openDetail(id){const c=cardById.get(id);if(!c)return;detailId=id;$('#detailTitle').textContent=c.title;const q=c.questions.map(item=>`<li>${esc(item.text)} <small>· ${esc(item.basis)}</small></li>`).join('');const versions=c.provenance.versions.map(v=>`<tr><td><code>${esc(v.path)}</code></td><td>${bytes(v.size)}</td><td><code>${esc(v.sha256.slice(0,12))}</code></td></tr>`).join('');$('#detailBody').innerHTML=`<div class="badges">${badgesHtml(c)}<span class="badge">${esc(c.scoreOrigin)}</span></div><p style="color:var(--muted);margin-top:.8rem">${esc(c.description)}</p><div class="score-grid" style="margin:.8rem 0">${scoreHtml('compatibility',c.scores.compatibility)}${scoreHtml('evidence',c.scores.evidence)}${scoreHtml('safety',c.scores.safety)}${scoreHtml('maturity',c.scores.maturity)}</div><div class="dialog-grid"><section class="dialog-section"><h3>Questions answered</h3><ul>${q||'<li>No question metadata yet.</li>'}</ul></section><section class="dialog-section"><h3>Concepts & features</h3><div class="concepts">${[...c.concepts,...c.features].map(x=>`<span class="badge">${esc(x)}</span>`).join('')}</div></section><section class="dialog-section"><h3>Provenance</h3><p><code>${esc(c.path)}</code></p><p>SHA-256: <code>${esc(c.provenance.sha256)}</code></p><p>${c.provenance.familyFiles} public file path(s) · ${c.provenance.distinctBuilds} distinct build(s) · grouping confidence ${Math.round(c.provenance.groupingConfidence*100)}%</p><p>Family method: ${esc(c.provenance.familyStatus)} / ${esc(c.provenance.groupingReason)}</p></section><section class="dialog-section"><h3>Rights & caution</h3><p>Nearest detected license: <strong>${esc(c.license)}</strong></p><p>Metadata visibility does not grant reuse rights. Scores describe documentation signals, not validation or safety certification.</p></section></div><details class="doc" style="margin-top:.8rem"><summary>Version family paths</summary><div class="doc-body"><div class="table-wrap"><table><thead><tr><th>Path</th><th>Size</th><th>Hash prefix</th></tr></thead><tbody>${versions}</tbody></table></div></div></details><div class="field" style="margin-top:.8rem"><label for="recordNote">Private local note</label><textarea class="textarea" id="recordNote" rows="4" maxlength="10000" placeholder="Questions, possible interfaces, evidence gaps…">${esc(state.notes[id]||'')}</textarea><small style="color:var(--muted)">Stored only in this browser until you export the workspace.</small></div>`;$('#recordNote').addEventListener('input',e=>{state.notes[id]=e.target.value;scheduleSave()});renderDetailButtons();$('#detailDialog').showModal()}
+
+    function setView(view){if(!allowedViews.has(view))view='explore';state.view=view;$$('.view').forEach(v=>{const on=v.id===`view-${view}`;v.classList.toggle('active',on);v.hidden=!on});$$('[data-view-target]').forEach(t=>t.setAttribute('aria-selected',String(t.dataset.viewTarget===view)));history.replaceState(null,'',`#${view}`);scheduleSave();if(view==='recombine')requestAnimationFrame(renderMixer);if(view==='recipes')renderRecipes();if(view==='research')renderResearch();if(view==='inventory')renderInventory()}
+
+    function sharedWeight(a,b){const concepts=a.concepts.filter(x=>b.concepts.includes(x)).length,domains=a.domains.filter(x=>b.domains.includes(x)).length,layers=a.layers.filter(x=>b.layers.includes(x)).length;return concepts*3+domains*2+layers}
+    function mixerCards(){return state.mixer.map(id=>cardById.get(id)).filter(Boolean)}
+    function compatibilitySummary(cards){if(!cards.length)return null;return {compatibility:Math.round(cards.reduce((s,c)=>s+c.scores.compatibility,0)/cards.length),evidence:Math.round(cards.reduce((s,c)=>s+c.scores.evidence,0)/cards.length),safety:Math.round(cards.reduce((s,c)=>s+c.scores.safety,0)/cards.length)}}
+    function suggestions(){const selected=mixerCards();if(!selected.length)return DATA.cards.filter(c=>c.scores.safety>=70&&c.scores.evidence>=55).slice(0,6);const ids=new Set(state.mixer);return DATA.cards.filter(c=>!ids.has(c.id)).map(c=>({c,score:selected.reduce((s,x)=>s+sharedWeight(c,x),0)+c.scores.compatibility/20+c.scores.safety/30})).filter(x=>x.score>4).sort((a,b)=>b.score-a.score).slice(0,7).map(x=>x.c)}
+    function renderMixer(){const selected=mixerCards();$('#selectedList').innerHTML=selected.length?selected.map(c=>`<div class="selected-item"><div><b>${esc(c.title)}</b><small>${esc(c.layer)} · ${esc(c.domain)}</small></div><button class="btn icon small" data-remove-mix="${c.id}" aria-label="Remove ${esc(c.title)}">×</button></div>`).join(''):`<div class="empty" style="padding:1rem"><p>Add artifacts from Explore or load an example.</p></div>`;const summary=compatibilitySummary(selected);$('#compatBox').innerHTML=summary?`<div class="compat-numbers"><div><strong>${summary.compatibility}</strong><span>avg compatibility</span></div><div><strong>${summary.evidence}</strong><span>avg evidence signal</span></div><div><strong>${summary.safety}</strong><span>avg safety signal</span></div></div><p style="color:var(--muted);font-size:.78rem;margin:.6rem 0 0">${selected.some(c=>c.knowledgeStatus==='speculative concept')?'Contains speculative concepts: define testable mechanisms before integration.':'Shared scores do not prove legal, scientific, or technical interoperability.'}</p>`:`<p style="color:var(--muted);margin:0">Compatibility appears after selection.</p>`;$('#suggestionList').innerHTML=suggestions().map(c=>`<div class="suggestion"><b>${esc(c.title)}</b><small>${esc(c.concepts.slice(0,2).join(' · '))}</small><button class="btn small" style="margin-top:.45rem" data-add-suggestion="${c.id}" type="button">Add</button></div>`).join('');renderCounts();drawGraph(selected.length?selected:DATA.cards.filter(c=>['decision_atlas/index.html','ai_targeting_incident_ledger_v1/index.html','benevolent_platform_architecture/index.html'].includes(c.path)).slice(0,6))}
+    function nodeColor(layer){return ({concept:'#b9a5ff',module:'#75c9ed',pattern:'#efc66f',system:'#7be3aa',deployment:'#ff917d',dataset:'#72d5d0',research:'#9fb7ff',safety:'#ffd17d',innovation:'#dc9cff'})[layer]||'#9db9ae'}
+    function drawGraph(cards){const canvas=$('#graphCanvas'),wrap=canvas.parentElement,rect=wrap.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(300,rect.width),h=rect.height||480;canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);const n=cards.length,center={x:w/2,y:h/2},radius=Math.min(w,h)*.32;graphNodes=cards.map((c,i)=>({c,x:center.x+Math.cos((i/n)*Math.PI*2-Math.PI/2)*radius,y:center.y+Math.sin((i/n)*Math.PI*2-Math.PI/2)*radius,r:Math.max(28,Math.min(43,30+c.scores.maturity/12))}));const edges=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const weight=sharedWeight(cards[i],cards[j]);if(weight>0)edges.push({a:graphNodes[i],b:graphNodes[j],weight})}edges.forEach(e=>{ctx.beginPath();ctx.moveTo(e.a.x,e.a.y);ctx.lineTo(e.b.x,e.b.y);ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--line-strong').trim();ctx.globalAlpha=Math.min(.75,.18+e.weight/18);ctx.lineWidth=Math.min(5,1+e.weight/5);ctx.stroke()});ctx.globalAlpha=1;graphNodes.forEach(node=>{ctx.beginPath();ctx.arc(node.x,node.y,node.r,0,Math.PI*2);ctx.fillStyle=nodeColor(node.c.layer);ctx.globalAlpha=.16;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=nodeColor(node.c.layer);ctx.lineWidth=2;ctx.stroke();ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--text').trim();ctx.font='700 12px Segoe UI, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const words=node.c.title.split(/\s+/),line1=words.slice(0,3).join(' '),line2=words.length>3?words.slice(3,6).join(' '):'';ctx.fillText(line1.slice(0,22),node.x,node.y-(line2?7:0));if(line2)ctx.fillText(line2.slice(0,22),node.x,node.y+8)});$('#graphEdges').innerHTML=edges.length?edges.sort((a,b)=>b.weight-a.weight).map(e=>`<li><strong>${esc(e.a.c.title)}</strong> ↔ <strong>${esc(e.b.c.title)}</strong>: ${e.weight} shared-weight points.</li>`).join(''):'<li>No shared concepts yet; this may signal a missing interface or an unsafe forced combination.</li>'}
+
+    function renderRecipes(){$('#recipeGrid').innerHTML=DATA.recipes.map(r=>{const components=r.componentIds.map(id=>cardById.get(id)).filter(Boolean);return `<article class="recipe"><div class="badges"><span class="badge layer">recipe</span><span class="badge">compatibility ${r.compatibility}</span></div><h3 style="margin-top:.6rem">${esc(r.title)}</h3><p>${esc(r.outcome)}</p><div class="concepts">${components.map(c=>`<button class="chip" data-detail="${c.id}" type="button">${esc(c.title)}</button>`).join('')}</div><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><div class="gate"><strong>Safety gate:</strong> ${esc(r.safetyGate)}</div><div class="gate evidence"><strong>Evidence gate:</strong> ${esc(r.evidenceGate)}</div><button class="btn primary" data-load-recipe="${r.id}" type="button">Load ${components.length} components into mixer</button></article>`}).join('')}
+
+    function renderResearch(){const q=$('#researchSearch').value.trim().toLowerCase(),layer=$('#researchLayer').value;const list=DATA.auxiliaries.filter(r=>(!q||[r.title,r.path,r.description,...r.concepts].join(' ').toLowerCase().includes(q))&&(!layer||r.layers.includes(layer)));const shown=list.slice(0,researchLimit);$('#researchList').innerHTML=shown.map(r=>`<article class="data-row"><div><b>${esc(r.title)}</b><small>${esc(r.description)}</small><small class="mono">${esc(r.path)}</small></div><div class="badges"><span class="badge layer">${esc(r.layer)}</span><span class="badge">${esc(r.extension)}</span></div><div class="right">${bytes(r.sizeBytes)}<br>${r.copies} cop${r.copies===1?'y':'ies'}<br>${esc(r.license)}</div></article>`).join('')||'<div class="empty">No matching research or data records.</div>';$('#loadMoreResearch').hidden=shown.length>=list.length}
+
+    function renderInventory(){const m=DATA.metrics;$('#dedupeFlow').innerHTML=[[m.htmlFiles,'HTML files'],[m.distinctHtmlBuilds,'byte-distinct'],[m.normalizedTextBuilds,'visible-text builds'],[m.versionFamilies,'version families'],[m.publicCatalogFamilies,'public families']].map(([n,label])=>`<div class="dedupe-step"><strong>${fmt(n)}</strong><span>${esc(label)}</span></div>`).join('');$('#extensionRows').innerHTML=DATA.extensionCounts.slice(0,30).map(r=>`<tr><td><code>${esc(r.extension||'[none]')}</code></td><td>${fmt(r.count)}</td></tr>`).join('');$('#quarantineRows').innerHTML=DATA.quarantineSummary.filter(r=>r.count).map(r=>`<tr><td>${esc(r.reason)}</td><td>${fmt(r.count)}</td></tr>`).join('');if($('#inventoryExtension').options.length===1)fillSelect($('#inventoryExtension'),DATA.extensionCounts.map(r=>r.extension||'[none]'));const q=$('#inventorySearch').value.trim().toLowerCase(),ext=$('#inventoryExtension').value;const list=DATA.rawInventory.filter(r=>(!q||[r.path,r.category,r.extension,r.sha256].join(' ').toLowerCase().includes(q))&&(!ext||r.extension===ext));const shown=list.slice(0,inventoryLimit);$('#inventoryRows').innerHTML=shown.map(r=>`<tr><td><code>${esc(r.path)}</code></td><td>${esc(r.category)} · ${esc(r.extension)}</td><td>${bytes(r.sizeBytes)}</td><td>${r.copies}</td><td><code>${esc(r.sha256)}</code></td></tr>`).join('');$('#loadMoreInventory').hidden=shown.length>=list.length}
+    function renderDefinitions(){const render=(obj,target)=>$(target).innerHTML=Object.entries(obj).map(([name,desc])=>`<div class="definition"><b>${esc(name)}</b><span>${esc(desc)}</span></div>`).join('');render(DATA.definitions.layers,'#layerDefinitions');render(DATA.definitions.statuses,'#statusDefinitions');render(DATA.definitions.scores,'#scoreDefinitions');$('#licenseRows').innerHTML=DATA.licenseSummary.map(r=>`<tr><td>${esc(r.name)}</td><td>${fmt(r.count)}</td></tr>`).join('');$('#archiveHash').textContent=`download.zip\nSHA-256 ${DATA.source.archiveSha256}\n${fmt(DATA.metrics.actualFiles)} files · ${bytes(DATA.source.uncompressedBytes)}`}
+
+    async function exportWorkspace(){const payload={schema:state.schema,exportedAt:new Date().toISOString(),catalogSchema:DATA.schemaVersion,sourceArchiveSha256:DATA.source.archiveSha256,favorites:state.favorites,mixer:state.mixer,notes:state.notes,theme:state.theme,filters:state.filters};downloadBlob(JSON.stringify(payload,null,2),'planetary_systems_commons_workspace.json','application/json');toast('Workspace exported')}
+    function downloadBlob(content,name,type){const url=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+    async function importWorkspace(file){if(!file)return;if(file.size>2_000_000){toast('Workspace file is too large');return}try{const parsed=JSON.parse(await file.text());state=validateState(parsed);applyTheme();initFilters();renderCards();setView(state.view);scheduleSave();toast('Workspace imported')}catch{toast('That workspace file is not valid')}}
+    async function resetWorkspace(){state=structuredClone(defaultState);applyTheme();initFilters();renderCards();renderMixer();setView('explore');await dbPut(state);$('#resetDialog').close();toast('Local workspace reset')}
+
+    function bindEvents(){
+      $$('.tab').forEach(t=>t.addEventListener('click',()=>setView(t.dataset.viewTarget)));
+      $('#filterForm').addEventListener('input',e=>{if(e.target.id==='evidenceRange')$('#evidenceValue').textContent=e.target.value;syncFilters()});$('#filterForm').addEventListener('change',syncFilters);
+      $('#layerChips').addEventListener('click',e=>{const b=e.target.closest('[data-layer-chip]');if(!b)return;$('#layerSelect').value=b.dataset.layerChip;syncFilters()});
+      $('#clearFilters').addEventListener('click',()=>{state.filters=structuredClone(defaultState.filters);initFilters();renderCards();scheduleSave()});
+      $('#loadMoreCards').addEventListener('click',()=>{cardLimit+=36;renderCards()});
+      document.addEventListener('click',e=>{const detail=e.target.closest('[data-detail]');if(detail){openDetail(detail.dataset.detail);return}const fav=e.target.closest('[data-favorite]');if(fav){toggleFavorite(fav.dataset.favorite);return}const mix=e.target.closest('[data-mix]');if(mix){toggleMixer(mix.dataset.mix);return}const rem=e.target.closest('[data-remove-mix]');if(rem){toggleMixer(rem.dataset.removeMix);return}const add=e.target.closest('[data-add-suggestion]');if(add){toggleMixer(add.dataset.addSuggestion);return}const recipe=e.target.closest('[data-load-recipe]');if(recipe){const r=DATA.recipes.find(x=>x.id===recipe.dataset.loadRecipe);state.mixer=r.componentIds.slice(0,6);scheduleSave();setView('recombine');toast('Recipe loaded locally');return}const close=e.target.closest('[data-close-dialog]');if(close)document.getElementById(close.dataset.closeDialog).close()});
+      $('#detailFavorite').addEventListener('click',()=>toggleFavorite(detailId));$('#detailMix').addEventListener('click',()=>toggleMixer(detailId));
+      $('#suggestBtn').addEventListener('click',()=>{renderMixer();toast('Suggestions ranked by shared concepts and safety signals')});
+      $('#loadExampleBtn').addEventListener('click',()=>{const r=DATA.recipes.find(x=>x.id==='conflict_evidence_loop')||DATA.recipes[0];state.mixer=r.componentIds.slice(0,6);scheduleSave();renderMixer();toast('Evidence-safe example loaded')});
+      $('#clearMixerBtn').addEventListener('click',()=>{state.mixer=[];scheduleSave();renderMixer();renderCards()});
+      $('#graphCanvas').addEventListener('click',e=>{const rect=e.currentTarget.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,node=graphNodes.find(n=>Math.hypot(n.x-x,n.y-y)<=n.r+5);if(node)openDetail(node.c.id)});
+      $('#researchSearch').addEventListener('input',()=>{researchLimit=60;renderResearch()});$('#researchLayer').addEventListener('change',()=>{researchLimit=60;renderResearch()});$('#loadMoreResearch').addEventListener('click',()=>{researchLimit+=60;renderResearch()});
+      $('#inventorySearch').addEventListener('input',()=>{inventoryLimit=80;renderInventory()});$('#inventoryExtension').addEventListener('change',()=>{inventoryLimit=80;renderInventory()});$('#loadMoreInventory').addEventListener('click',()=>{inventoryLimit+=80;renderInventory()});
+      $('#exportBtn').addEventListener('click',exportWorkspace);$('#importFile').addEventListener('change',e=>{importWorkspace(e.target.files[0]);e.target.value=''});$('#printBtn').addEventListener('click',()=>window.print());
+      $('#themeBtn').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme();scheduleSave();if(state.view==='recombine')renderMixer()});
+      $('#resetBtn').addEventListener('click',()=>$('#resetDialog').showModal());$('#confirmReset').addEventListener('click',resetWorkspace);
+      window.addEventListener('resize',()=>{if(state.view==='recombine')drawGraph(mixerCards())},{passive:true});window.addEventListener('hashchange',()=>setView(location.hash.slice(1)));
+    }
+
+    async function init(){await loadState();applyTheme();initMetrics();initFilters();renderCards();renderDefinitions();renderRecipes();bindEvents();const hash=location.hash.slice(1);setView(allowedViews.has(hash)?hash:state.view);renderCounts()}
+    init().catch(err=>{console.error(err);$('#storageStatus').textContent='Catalogue loaded; local persistence unavailable';toast('The catalogue loaded with limited local persistence')});
+  })();
+  </script>
+</body>
+</html>
